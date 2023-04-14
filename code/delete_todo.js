@@ -9,39 +9,55 @@
  */
 
 const headers = {
-	'content-type': 'application/json'
+  'content-type': 'application/json',
+  'Access-Control-Allow-Origin': '*'
+}
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET,HEAD,POST,OPTIONS',
+  'Access-Control-Max-Age': '86400'
 }
 const okResponse = {
   status: 200,
   headers
 }
 const notOkResponse = {
-	status: 400,
-	headers
+  status: 400,
+  headers
 }
 const notOk = JSON.stringify({ ok: false })
 
 export default {
-	async fetch(request, env, ctx) {
-	  // only accept application/json requests	
-		const contentType = request.headers.get("content-type");
-    if (contentType.includes("application/json")) {
-
-			// parse the json
-      const json = await request.json()
-
-			// if there's a id
-			if (json.id) {
-
-				// delete the id from the KV store
-				const r = await env.TODOLIST.delete(json.id)
-
-				// send response
-				return new Response(JSON.stringify({ ok: true, id: json.id }), okResponse)
-			}
+  async fetch (request, env, ctx) {
+    // handle OPTIONS (CORS pre-flight request)
+    if (request.method.toUpperCase() === 'OPTIONS') {
+      return new Response(null, {
+        headers: {
+          ...corsHeaders,
+          'Access-Control-Allow-Headers': request.headers.get(
+            'Access-Control-Request-Headers'
+          )
+        }
+      })
     }
 
-		// everyone else gets a 400 response
-		return new Response(notOk, notOkResponse)	
-	}
+    // only accept application/json requests
+    const contentType = request.headers.get('content-type')
+    if (contentType.includes('application/json')) {
+      // parse the json
+      const json = await request.json()
+
+      // if there's a id
+      if (json.id) {
+        // delete the id from the KV store
+        await env.TODOLIST.delete(json.id)
+
+        // send response
+        return new Response(JSON.stringify({ ok: true, id: json.id }), okResponse)
+      }
+    }
+
+    // everyone else gets a 400 response
+    return new Response(notOk, notOkResponse)
+  }
 }

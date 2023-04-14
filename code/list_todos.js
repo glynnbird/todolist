@@ -9,7 +9,8 @@
  */
 
 const headers = {
-	'content-type': 'application/json'
+  'content-type': 'application/json',
+  'Access-Control-Allow-Origin': '*'
 }
 const okResponse = {
   status: 200,
@@ -17,14 +18,13 @@ const okResponse = {
 }
 
 export default {
-	async fetch(request, env, ctx) {
-
+  async fetch (request, env, ctx) {
     // write key/value to the KV store, bound to this worker as TODOLIST
     const r = await env.TODOLIST.list()
 
     // map to a list of objects
     const output = r.keys.map((k) => {
-      // k.name = '1681480420026:jam' 
+      // k.name = '1681480420026:jam'
       const m = k.name.match(/^([0-9]+):(.*)$/)
       return {
         id: k.name,
@@ -40,5 +40,5 @@ export default {
 
     // send response
     return new Response(JSON.stringify({ ok: true, list: output }), okResponse)
-	}
+  }
 }
