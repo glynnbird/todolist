@@ -12,6 +12,11 @@ const headers = {
   'content-type': 'application/json',
   'Access-Control-Allow-Origin': '*'
 }
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET,HEAD,POST,OPTIONS',
+  'Access-Control-Max-Age': '86400'
+}
 const okResponse = {
   status: 200,
   headers
@@ -24,6 +29,18 @@ const notOk = JSON.stringify({ ok: false })
 
 export default {
   async fetch (request, env, ctx) {
+    // handle OPTIONS (CORS pre-flight request)
+    if (request.method.toUpperCase() === 'OPTIONS') {
+      return new Response(null, {
+        headers: {
+          ...corsHeaders,
+          'Access-Control-Allow-Headers': request.headers.get(
+            'Access-Control-Request-Headers'
+          )
+        }
+      })
+    }
+
     // only accept application/json requests
     const contentType = request.headers.get('content-type')
     if (contentType.includes('application/json')) {
