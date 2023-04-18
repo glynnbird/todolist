@@ -2,3 +2,5 @@ terraform.tfvars
 terraform.tfstate.d
 .terraform
 todo.txt
+code/dist
+code/node_modules

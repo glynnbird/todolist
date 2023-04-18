@@ -1,44 +1,12 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npx wrangler dev src/index.js` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npx wrangler publish src/index.js --name my-worker` to publish your worker
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
-
-const headers = {
-  'content-type': 'application/json',
-  'Access-Control-Allow-Origin': '*'
-}
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET,HEAD,POST,OPTIONS',
-  'Access-Control-Max-Age': '86400'
-}
-const okResponse = {
-  status: 200,
-  headers
-}
-const notOkResponse = {
-  status: 400,
-  headers
-}
-const notOk = JSON.stringify({ ok: false })
+import { okResponse, notOkResponse, notOk } from './lib/constants.js'
+import { handleCORS } from './lib/cors.js'
 
 export default {
   async fetch (request, env, ctx) {
-    // handle OPTIONS (CORS pre-flight request)
-    if (request.method.toUpperCase() === 'OPTIONS') {
-      return new Response(null, {
-        headers: {
-          ...corsHeaders,
-          'Access-Control-Allow-Headers': request.headers.get(
-            'Access-Control-Request-Headers'
-          )
-        }
-      })
+    // handle CORS "OPTIONS" pre-flight request
+    const r = handleCORS(request)
+    if (r) {
+      return r
     }
 
     // only accept application/json requests

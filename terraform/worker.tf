@@ -1,7 +1,7 @@
 resource "cloudflare_worker_script" "add_todo_worker" {
   account_id = var.cloudflare_account_id
   name       = "add_todo_${terraform.workspace}"
-  content    = file("../code/add_todo.js")
+  content    = file("../code/dist/add_todo.js")
   module     = true
 
   kv_namespace_binding {
@@ -24,7 +24,7 @@ output "add_api_url" {
 resource "cloudflare_worker_script" "list_todos_worker" {
   account_id = var.cloudflare_account_id
   name       = "list_todos_${terraform.workspace}"
-  content    = file("../code/list_todos.js")
+  content    = file("../code/dist/list_todos.js")
   module     = true
 
   kv_namespace_binding {
@@ -46,7 +46,7 @@ output "list_api_url" {
 resource "cloudflare_worker_script" "delete_todo_worker" {
   account_id = var.cloudflare_account_id
   name       = "delete_todo_${terraform.workspace}"
-  content    = file("../code/delete_todo.js")
+  content    = file("../code/dist/delete_todo.js")
   module     = true
 
   kv_namespace_binding {
@@ -68,7 +68,7 @@ output "delete_api_url" {
 resource "cloudflare_worker_script" "get_todo_worker" {
   account_id = var.cloudflare_account_id
   name       = "get_todo_${terraform.workspace}"
-  content    = file("../code/get_todo.js")
+  content    = file("../code/dist/get_todo.js")
   module     = true
 
   kv_namespace_binding {
