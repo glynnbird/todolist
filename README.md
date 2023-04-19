@@ -53,3 +53,35 @@ Parameters:
 curl -X POST -H'Content-type:application/json' -d'{"id":"1681482390981:Milk"}' "https://$URL/delete"
 {"ok":true,"id":"1681482390981:Milk"}
 ```
+
+## Build
+
+The Cloudflare Worker platform will only accept a single JavaScript file per worker. When you have multiple workers, there is a tendency for them to share data: constants, library functions etc. It is anathema to developers to repeat code across files so what is the solution?
+
+ - write code in the normal way, with centralised "lib" files containing code or data that is shared.
+ - use `import` statements in each worker file to import data from the files
+ - use the [rollup](https://rollupjs.org/) utility to pre-process each worker JS file prior to uploading.
+
+ This produces files in the `dist` folder which are those expected by Terraform for deployment.
+
+ e.g. in `lib/somefile.js`
+
+```js
+export const someFunction = () => {
+  return true  
+}
+```
+
+And in your worker JS file:
+
+```js
+import { someFunction } from './lib/somefile.js'
+someFunction()
+```
+
+And roll up with:
+
+```sh
+# create a distributable file in the 'dist' folder based on the source file
+npx rollup --format=es --file=dist/add_todo.js -- add_todo.js
+```
