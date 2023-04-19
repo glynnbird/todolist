@@ -20,7 +20,6 @@ output "add_api_url" {
   value       = cloudflare_worker_route.add_todo_route.pattern
 }
 
-
 resource "cloudflare_worker_script" "list_todos_worker" {
   account_id = var.cloudflare_account_id
   name       = "list_todos_${terraform.workspace}"
@@ -86,16 +85,3 @@ resource "cloudflare_worker_route" "get_todo_route" {
 output "get_api_url" {
   value       = cloudflare_worker_route.get_todo_route.pattern
 }
-
-# resource "cloudflare_worker_route" "add_todo_route" {
-#   zone_id     = var.cloudflare_zone_id
-#   pattern     = "glynnbird.com/*"
-#   script_name = cloudflare_worker_script.add_todo_worker.name
-# }
-
-# resource "cloudflare_worker_route" "add_todo_route" {
-#   zone_id     = var.cloudflare_zone_id
-#   pattern     = "todo.glynnbird.com/add"
-#   script_name = cloudflare_worker_script.add_todo_worker.name
-# }
-
