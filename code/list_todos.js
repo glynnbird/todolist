@@ -1,5 +1,4 @@
-import { okResponse, notOkResponse, notOk } from './lib/constants.js'
-import { handleCORS } from './lib/cors.js'
+import { okResponse } from './lib/constants.js'
 
 export default {
   async fetch (request, env, ctx) {
