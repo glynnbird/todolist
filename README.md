@@ -85,3 +85,23 @@ And roll up with:
 # create a distributable file in the 'dist' folder based on the source file
 npx rollup --format=es --file=dist/add_todo.js -- add_todo.js
 ```
+
+## Routing
+
+There are number of options:
+
+1. Routes - for each worker, attach a URL to which it will be called with. This requires you to set up a DNS CNAME so that Cloudflare can intercept the traffic. One "route" is required for each worker.
+2. Custom Domains - Cloudflare allows you to set up a custom domain e.g. `something.glynnnbird.com` which gets routed to a single worker. This worker can do all of the housekeeping and the invoke the the right worker to handle the request. This is a simpler approach because it automatically brings the CNAME under Terraform control and plumbs it into the Worker.
+
+My `router.js` does some sanity checks
+
+- Is this a `POST` request?
+- Is the user supplying a `Content-type: application/json` header?
+
+If not, they get HTTP 400.
+
+It also handles `OPTIONS` (CORS pre-flight checks) for all routes in one place.
+
+It then checks the incoming path (e.g. `/add`) and decides which Worker to call. These Workers are do not have public routes, so you can only get to them through the router.
+
+The router worker needs "service bindings" to be able to call another worker. This is all set up in Terraform. The router worker is not bound to the KV store, but the individual workers are.
