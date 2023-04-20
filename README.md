@@ -1,5 +1,17 @@
 # todolist
 
+## Data model
+
+As we only have simple KeyValue store and the Cloudflare KV.list() operation only returns the keys (not the values), the data model packs some data into the key.
+
+| key                    | value                                                            |
+|------------------------|------------------------------------------------------------------|
+| 1681893518478:Oranges  | {"time":"2023-04-19T08:38:38.478Z","description":"Big ones"}     |
+| 1681894657902:Lemonade | {"time":"2023-04-19T08:57:37.902Z","description":"Cloudy"}       |
+| 1681897942565:Bread    | {"time":"2023-04-19T09:52:22.565Z","description":"French stick"} |
+
+The keys have a timestamp prefix followed a `:` and then by the `title` of the Todo. This allows us to get time-ordered list of todo titles with just the `KV.list()` function. If we want the `description`, the client will have to fetch each todo's body.
+
 ## API
 
 All methods that change data or pass parameters use the `POST` method and expect an `application/json` content type.

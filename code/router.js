@@ -5,7 +5,6 @@ export default {
   async fetch (request, env, ctx) {
     // handle CORS "OPTIONS" pre-flight request
     const r = handleCORS(request)
-    console.log('CORS', r)
     if (r) {
       return r
     }
@@ -14,7 +13,6 @@ export default {
     if (request.method.toUpperCase() !== 'POST') {
       return new Response(badMethod, notOkResponse)
     }
-    console.log('POST request')
 
     // must be an application/json header
     const contentType = request.headers.get('content-type')
@@ -24,29 +22,20 @@ export default {
 
     // parse the incoming URL
     const u = new URL(request.url)
-    switch (u.pathname) {
-      case '/get':
-        console.log('calling getToDo')
-        return await env.WORKER_GET_TODO.fetch(request, env, ctx)
-      break
-      
-      case '/delete':
-        console.log('calling deleteToDo')
-        return await env.WORKER_DELETE_TODO.fetch(request, env, ctx)
-      break
 
-      case '/list':
-        console.log('calling listToDos')
-        return await env.WORKER_LIST_TODOS.fetch(request, env, ctx)
-      break
-
-      case '/add':
-        console.log('calling addToDo')
-        return await env.WORKER_ADD_TODO.fetch(request, env, ctx)
-      break
-
-      default:
-        return new Response(notOk, notOkResponse)
+    // list of allowed paths and which worker will handle the request 
+    const mapping = {
+      '/get': env.WORKER_GET_TODO,
+      '/delete': env.WORKER_DELETE_TODO,
+      '/list': env.WORKER_LIST_TODOS,
+      '/add': env.WORKER_ADD_TODO
     }
+    const worker = mapping[u.pathname]
+    if (worker) {
+      // pass the request to the handling worker
+      return await worker.fetch(request, env, ctx)
+    }
+    // if you get here it's because the request pathname is not recognised - so HTTP 400
+    return new Response(notOk, notOkResponse)
   }
 }
