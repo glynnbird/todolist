@@ -61,25 +61,29 @@ resource "cloudflare_worker_script" "router_worker" {
   service_binding {
     name        = "WORKER_ADD_TODO"
     service     = cloudflare_worker_script.add_todo_worker.name
+    environment = "production" 
   }
   service_binding {
     name        = "WORKER_LIST_TODOS"
     service     = cloudflare_worker_script.list_todos_worker.name
+    environment = "production" 
   }
   service_binding {
     name        = "WORKER_GET_TODO"
     service     = cloudflare_worker_script.get_todo_worker.name
+    environment = "production" 
   }
   service_binding {
     name        = "WORKER_DELETE_TODO"
     service     = cloudflare_worker_script.delete_todo_worker.name
+    environment = "production" 
   }
 }
 
 
 resource "cloudflare_worker_domain" "worker_domain" {
   account_id = var.cloudflare_account_id
-  hostname   = "${var.cloudflare_domain}"
+  hostname   = var.cloudflare_domain
   service    = cloudflare_worker_script.router_worker.name
   zone_id    = var.cloudflare_zone_id
 }
