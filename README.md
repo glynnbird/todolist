@@ -135,3 +135,12 @@ It then checks the incoming path (e.g. `/add`) and decides which Worker to call.
 The router worker needs "service bindings" to be able to call another worker. This is all set up in Terraform. 
 
 The router worker is not bound to the KV namespace, but the individual workers are.
+
+## Using itty-router
+
+If you're making a complex API with lots of methods and parameterised paths like `/todo/:id` then it makes sense to use [itty-router](https://github.com/kwhitley/itty-router) which is Cloudflare Worker compatible and gives you an Express-like interface.
+
+I did get it working but found that `params` didn't get passed down to bound workers properly. I gave up in the end.
+
+If I ever come back to it, remember that you need to do `npm install --save-dev @rollup/plugin-node-resolve` first. This allows rollup to bundle in Node.js dependencies with your own JavaScript files.
+
