@@ -3,11 +3,9 @@ import { handleCORS, mustBePOST, mustBeJSON, apiKey } from './lib/checks.js'
 
 export default {
   async fetch (request, env, ctx) {
-    // handle CORS/POST/JSON chcecks
+    // handle CORS/POST/JSON/apikey chcecks
     const r = handleCORS(request) || apiKey(request, env) || mustBePOST(request) || mustBeJSON(request)
-    if (r) {
-      return r
-    }
+    if (r) return r
 
     // parse the incoming URL
     const u = new URL(request.url)

@@ -23,7 +23,7 @@ The keys have a timestamp prefix followed a `:` and then by the `title` of the T
 
 ## API
 
-All methods that change data or pass parameters use the `POST` method and expect an `application/json` content type.
+All methods that change data or pass parameters use the `POST` method and expect an `application/json` content type. All API endpoints require a valid `apikey` header or you will get a 401 response.
 
 ## Add a todo - POST /add
 
@@ -35,7 +35,7 @@ Parameters:
 e.g.
 
 ```sh
-curl -X POST -H'Content-type:application/json' -d'{"title":"Milk","description":"semi-skimmed"}' "https://$URL/add" 
+curl -X POST -H'Content-type:application/json' -H'apikey: abc123' -d'{"title":"Milk","description":"semi-skimmed"}' "https://$URL/add" 
 {"ok":true,"id":"1681482390981:Milk"}
 ```
 ## Get a single todo - POST /get
@@ -47,7 +47,7 @@ Parameters:
 e.g.
 
 ```sh
-curl -X POST -H'Content-type:application/json' -d'{"id":"1681482390981:Milk"}' "https://$URL/get"
+curl -X POST -H'Content-type:application/json' -H'apikey: abc123' -d'{"id":"1681482390981:Milk"}' "https://$URL/get"
 {"ok":true,"todo":{"id":"1681482390981:Milk","time":"2023-04-14T14:26:30.981Z","description":"semi-skimmed"}}
 ```
 
@@ -60,7 +60,7 @@ Parameters
 e.g.
 
 ```sh
-curl -X POST -H'Content-type:application/json' "https://$URL/list"
+curl -X POST -H'Content-type:application/json' -H'apikey: abc123' "https://$URL/list"
 {"ok":true,"list":[{"id":"1681480376706:water","title":"water","ts":"2023-04-14T13:52:56.706Z"},{"id":"1681480420026:jam","title":"jam","ts":"2023-04-14T13:53:40.026Z"},{"id":"1681482390981:Milk","title":"Milk","ts":"2023-04-14T14:26:30.981Z"}]}
 ```
 
@@ -71,7 +71,7 @@ Parameters:
 - `id` - the id of the todo to delete (required)
 
 ```sh
-curl -X POST -H'Content-type:application/json' -d'{"id":"1681482390981:Milk"}' "https://$URL/delete"
+curl -X POST -H'Content-type:application/json' -H'apikey: abc123' -d'{"id":"1681482390981:Milk"}' "https://$URL/delete"
 {"ok":true,"id":"1681482390981:Milk"}
 ```
 

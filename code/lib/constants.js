@@ -20,7 +20,7 @@ export const missingResponse = {
   headers
 }
 export const notAuthorisedResponse = {
-  status: 403,
+  status: 401,
   headers
 }
 export const notOk =  JSON.stringify({ ok: false })
