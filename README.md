@@ -1,5 +1,14 @@
 # todolist
 
+## Terraform-built infrastructure
+
+This app requires some Cloudflare infrastructure, all of which is created using Terraform:
+
+1. A KV namespace.
+2. Various Workers that are bound to the KV namespace from (1).
+3. A "router" Worker that can invoke Workers from (2) in response to HTTP traffic.
+4. A custom domain whose traffic is sent to the router worker from step (3).
+
 ## Data model
 
 As we only have simple KeyValue store and the Cloudflare KV.list() operation only returns the keys (not the values), the data model packs some data into the key.
@@ -51,7 +60,7 @@ Parameters
 e.g.
 
 ```sh
-curl -X POST "https://$URL/list"
+curl -X POST -H'Content-type:application/json' "https://$URL/list"
 {"ok":true,"list":[{"id":"1681480376706:water","title":"water","ts":"2023-04-14T13:52:56.706Z"},{"id":"1681480420026:jam","title":"jam","ts":"2023-04-14T13:53:40.026Z"},{"id":"1681482390981:Milk","title":"Milk","ts":"2023-04-14T14:26:30.981Z"}]}
 ```
 
@@ -98,12 +107,19 @@ And roll up with:
 npx rollup --format=es --file=dist/add_todo.js -- add_todo.js
 ```
 
+We can also "minify" the rolled up files to make them smaller, but this does change variable names to single-letter names which makes debugging tricky:
+
+```sh
+# create a minified distributable file in the 'dist' folder based on the source file
+npx rollup -p @rollup/plugin-terser --format=es --file=dist/add_todo.js -- add_todo.js
+```
+
 ## Routing
 
 There are number of options:
 
-1. Routes - for each worker, attach a URL to which it will be called with. This requires you to set up a DNS CNAME so that Cloudflare can intercept the traffic. One "route" is required for each worker.
-2. Custom Domains - Cloudflare allows you to set up a custom domain e.g. `something.glynnnbird.com` which gets routed to a single worker. This worker can do all of the housekeeping and the invoke the the right worker to handle the request. This is a simpler approach because it automatically brings the CNAME under Terraform control and plumbs it into the Worker.
+1. Routes - for each worker, attach a URL to it. This requires us to set up a DNS CNAME that is proxied by Cloudflare so that Cloudflare can intercept the traffic. One "route" is required for each worker.
+2. Custom Domains - Cloudflare allows you to set up a custom domain e.g. `something.glynnnbird.com` which gets routed to a single worker. This worker can do all of the housekeeping and the invoke the right worker to handle the request. This is a simpler approach because it automatically brings the CNAME under Terraform control and plumbs it into the Worker.
 
 My `router.js` does some sanity checks
 
@@ -114,6 +130,8 @@ If not, they get HTTP 400.
 
 It also handles `OPTIONS` (CORS pre-flight checks) for all routes in one place.
 
-It then checks the incoming path (e.g. `/add`) and decides which Worker to call. These Workers are do not have public routes, so you can only get to them through the router.
+It then checks the incoming path (e.g. `/add`) and decides which Worker to call. These handler Workers are do not have public routes, so you can only get to them through the router.
 
-The router worker needs "service bindings" to be able to call another worker. This is all set up in Terraform. The router worker is not bound to the KV store, but the individual workers are.
+The router worker needs "service bindings" to be able to call another worker. This is all set up in Terraform. 
+
+The router worker is not bound to the KV namespace, but the individual workers are.
