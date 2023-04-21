@@ -1,23 +1,12 @@
-import { notOkResponse, notOk, badMethod, badContentType } from './lib/constants.js'
-import { handleCORS } from './lib/cors.js'
+import { notOkResponse, notOk } from './lib/constants.js'
+import { handleCORS, mustBePOST, mustBeJSON, apiKey } from './lib/checks.js'
 
 export default {
   async fetch (request, env, ctx) {
-    // handle CORS "OPTIONS" pre-flight request
-    const r = handleCORS(request)
+    // handle CORS/POST/JSON chcecks
+    const r = handleCORS(request) || apiKey(request, env) || mustBePOST(request) || mustBeJSON(request)
     if (r) {
       return r
-    }
-
-    // must be a POST
-    if (request.method.toUpperCase() !== 'POST') {
-      return new Response(badMethod, notOkResponse)
-    }
-
-    // must be an application/json header
-    const contentType = request.headers.get('content-type')
-    if (!contentType || !contentType.includes('application/json')) {
-      return new Response(badContentType, notOkResponse)
     }
 
     // parse the incoming URL

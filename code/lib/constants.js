@@ -19,6 +19,10 @@ export const missingResponse = {
   status: 404,
   headers
 }
+export const notAuthorisedResponse = {
+  status: 403,
+  headers
+}
 export const notOk =  JSON.stringify({ ok: false })
 export const badMethod =  JSON.stringify({ ok: false, message: 'only POST requests accepted' })
 export const badContentType =  JSON.stringify({ ok: false, message: 'only application/json accepted' })

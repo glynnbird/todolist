@@ -1,3 +1,17 @@
+# API key needed to access the API
+resource "random_string" "apiKey" {
+  length           = 20
+  special          = false
+  upper            = false
+  lower            = true
+}
+output apiKey {
+  value = random_string.apiKey.id
+}
+
+
+
+
 resource "cloudflare_worker_script" "add_todo_worker" {
   account_id = var.cloudflare_account_id
   name       = "add_todo_${terraform.workspace}"
@@ -78,8 +92,13 @@ resource "cloudflare_worker_script" "router_worker" {
     service     = cloudflare_worker_script.delete_todo_worker.name
     environment = "production" 
   }
-}
 
+  // let the router know the api key
+  plain_text_binding {
+    name = "API_KEY"
+    text = random_string.apiKey.id
+  }
+}
 
 resource "cloudflare_worker_domain" "worker_domain" {
   account_id = var.cloudflare_account_id
