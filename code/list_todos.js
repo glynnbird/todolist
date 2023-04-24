@@ -7,11 +7,9 @@ export default {
 
     // map to a list of objects
     const output = r.keys.map((k) => {
-      // k.name = '1681480420026:jam'
-      const m = k.name.match(/^([0-9]+):(.*)$/)
+      // k.name = '1681480420026'
       return {
         id: k.name,
-        title: m[2],
         ...k.metadata
       }
     })

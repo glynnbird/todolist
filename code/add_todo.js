@@ -9,17 +9,17 @@ export default {
     // if there's a title
     if (json.title) {
       // create a time-based key
-      const ts = (new Date().getTime()).toString()
-      const key = `${ts}:${json.title}`
+      const key = (new Date().getTime()).toString()
 
       // write key/value to the KV store, bound to this worker as TODOLIST
-      const value = {
+      const metadata = {
         time: new Date().toISOString(),
+        title: json.title,
         description: json.description
       }
       // put the data in "metadata" instead of value, so that it comes back
       // in the .list() request
-      await env.TODOLIST.put(key, null, { metadata: value })
+      await env.TODOLIST.put(key, null, { metadata })
 
       // send response
       return new Response(JSON.stringify({ ok: true, id: key }), okResponse)

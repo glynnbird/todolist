@@ -13,13 +13,13 @@ This app requires some Cloudflare infrastructure, all of which is created using 
 
 As we only have simple KeyValue store and the Cloudflare KV.list() operation only returns the keys (not the values), the data model packs some data into the key.
 
-| key                    | value |  metadata                                                        |
-|------------------------|-------|------------------------------------------------------------------|
-| 1681893518478:Oranges  | null  | {"time":"2023-04-19T08:38:38.478Z","description":"Big ones"}     |
-| 1681894657902:Lemonade | null  | {"time":"2023-04-19T08:57:37.902Z","description":"Cloudy"}       |
-| 1681897942565:Bread    | null  | {"time":"2023-04-19T09:52:22.565Z","description":"French stick"} |
+| key           | value |  metadata                                                                        |
+|---------------|-------|----------------------------------------------------------------------------------|
+| 1681893518478 | null  | {"time":"2023-04-19T08:38:38.478Z","title":"Grapes","description":"Big ones"}    |
+| 1681894657902 | null  | {"time":"2023-04-19T08:57:37.902Z","title":"Lemonade","description":"Cloudy"}    |
+| 1681897942565 | null  | {"time":"2023-04-19T09:52:22.565Z","title":"Bread","description":"French stick"} |
 
-The keys have a timestamp prefix followed a `:` and then by the `title` of the Todo. This allows us to get time-ordered list of todo titles with just the `KV.list()` function. The value is left blank because we're able to fit everything in the `metadata` object which has to be < 1kB, but does come back from the `KV.list` function.
+The keys is a timestamp. This allows us to get time-ordered list of todo titles with just the `KV.list()` function. The value is left blank because we're able to fit everything in the `metadata` object which has to be < 1kB, but does come back from the `KV.list` function.
 
 ## API
 
