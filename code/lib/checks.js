@@ -1,4 +1,4 @@
-import { notOkResponse, notOk, badMethod, badContentType, notAuthorisedResponse } from './constants.js'
+import { corsHeaders, notOkResponse, notOk, badMethod, badContentType, notAuthorisedResponse } from './constants.js'
 
 export const handleCORS = (request) => {
   // handle OPTIONS (CORS pre-flight request)
@@ -34,9 +34,7 @@ export const mustBeJSON = (request) => {
 
 export const apiKey = (request, env) => {
   // must be an application/json header
-  console.log('API_KEY', env.API_KEY)
   const apiKey = request.headers.get('apikey')
-  console.log('header API_KEY', apiKey)
   if (!apiKey || apiKey !== env.API_KEY) {
     return new Response(notOk, notAuthorisedResponse)
   }
