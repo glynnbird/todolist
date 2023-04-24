@@ -17,7 +17,9 @@ export default {
         time: new Date().toISOString(),
         description: json.description
       }
-      await env.TODOLIST.put(key, JSON.stringify(value))
+      // put the data in "metadata" instead of value, so that it comes back
+      // in the .list() request
+      await env.TODOLIST.put(key, null, { metadata: value })
 
       // send response
       return new Response(JSON.stringify({ ok: true, id: key }), okResponse)

@@ -12,7 +12,7 @@ export default {
       return {
         id: k.name,
         title: m[2],
-        ts: new Date(parseInt(m[1])).toISOString()
+        ...k.metadata
       }
     })
 
