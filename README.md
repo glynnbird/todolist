@@ -9,6 +9,8 @@ This app requires some Cloudflare infrastructure, all of which is created using 
 3. A "router" Worker that can invoke Workers from (2) in response to HTTP traffic.
 4. A custom domain whose traffic is sent to the router worker from step (3).
 
+![schematic](todo_infra.jpg)
+
 ## Data model
 
 As we only have simple KeyValue store and the Cloudflare KV.list() operation only returns the keys (not the values), the data model packs some data into the key.

@@ -9,9 +9,7 @@ output apiKey {
   value = random_string.apiKey.id
 }
 
-
-
-
+// add a new Todo
 resource "cloudflare_worker_script" "add_todo_worker" {
   account_id = var.cloudflare_account_id
   name       = "add_todo_${terraform.workspace}"
@@ -25,6 +23,7 @@ resource "cloudflare_worker_script" "add_todo_worker" {
   }
 }
 
+// list all Todos
 resource "cloudflare_worker_script" "list_todos_worker" {
   account_id = var.cloudflare_account_id
   name       = "list_todos_${terraform.workspace}"
@@ -38,6 +37,7 @@ resource "cloudflare_worker_script" "list_todos_worker" {
   }
 }
 
+// delete a single Todo
 resource "cloudflare_worker_script" "delete_todo_worker" {
   account_id = var.cloudflare_account_id
   name       = "delete_todo_${terraform.workspace}"
@@ -51,6 +51,7 @@ resource "cloudflare_worker_script" "delete_todo_worker" {
   }
 }
 
+// get a single Todo by ids
 resource "cloudflare_worker_script" "get_todo_worker" {
   account_id = var.cloudflare_account_id
   name       = "get_todo_${terraform.workspace}"
@@ -64,6 +65,7 @@ resource "cloudflare_worker_script" "get_todo_worker" {
   }
 }
 
+// router worker that is the first thing called with every incoming HTTP request
 resource "cloudflare_worker_script" "router_worker" {
   account_id = var.cloudflare_account_id
   name       = "router_${terraform.workspace}"
@@ -100,6 +102,7 @@ resource "cloudflare_worker_script" "router_worker" {
   }
 }
 
+// the router worker is bound to its own custom domain name (DNS record)
 resource "cloudflare_worker_domain" "worker_domain" {
   account_id = var.cloudflare_account_id
   hostname   = var.cloudflare_domain
