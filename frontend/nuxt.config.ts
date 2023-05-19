@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   ssr: false,
   runtimeConfig: {
     public: {
-      apiBase: 'https://mybase.com'
+      apiBase: 'https://todo.glynnbird.com'
     }
   },
   css: [
