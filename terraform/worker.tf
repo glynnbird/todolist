@@ -1,13 +1,4 @@
-# API key needed to access the API
-resource "random_string" "apiKey" {
-  length           = 20
-  special          = false
-  upper            = false
-  lower            = true
-}
-output apiKey {
-  value = random_string.apiKey.id
-}
+
 
 # // add a new Todo
 # resource "cloudflare_worker_script" "add_todo_worker" {
