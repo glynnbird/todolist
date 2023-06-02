@@ -2,16 +2,16 @@
   // composables
   const todos = useTodos()
   const auth = useAuth()
-  const apiHome = config.public['apiBase'] || window.location.origin
 
   // config
   const config = useRuntimeConfig()
+  const apiHome = config.public['apiBase'] || window.location.origin
 
   // if this is the first time,
   if (todos.value.length === 0) {
     try {
       //  fetch the list from the API
-      console.log('API', '/list')
+      console.log('API', '/list', `${apiHome}/api/list_todos`)
       const r = await useFetch(`${apiHome}/api/list_todos`, {
         method: 'post',
         headers: {
