@@ -25,16 +25,19 @@ resource "cloudflare_pages_project" "frontend_project" {
     }
   }
     deployment_configs {
-    preview {
-      environment_variables = {
-        NODE_VERSION = "18"
+      preview {
+        
       }
-    }
-    production {
-      environment_variables = {
-        NODE_VERSION = "18"
+      production {
+        environment_variables = {
+          NODE_VERSION = "18"
+          API_KEY = random_string.apiKey.id
+        }
+
+        kv_namespaces = {
+          TODOLIST = cloudflare_workers_kv_namespace.todolist_kv.id
+        }
       }
-    }
   }
 }
 
