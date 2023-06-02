@@ -2,6 +2,7 @@
   // composables
   const todos = useTodos()
   const auth = useAuth()
+  const apiHome = config.public['apiBase'] || window.location.origin
 
   // config
   const config = useRuntimeConfig()
@@ -11,7 +12,7 @@
     try {
       //  fetch the list from the API
       console.log('API', '/list')
-      const r = await useFetch(`${config.public['apiBase']}/list`, {
+      const r = await useFetch(`${apiHome}/api/list_todos`, {
         method: 'post',
         headers: {
           'content-type': 'application/json',
@@ -28,7 +29,7 @@
   const deleteTodo = async  (id) => {
     console.log('API', '/delete', id)
     try {
-      const ret = await useFetch(`${config.public['apiBase']}/delete`, {
+      const ret = await useFetch(`${apiHome}/api/delete_todo`, {
         method: 'post',
         body: {
           id
