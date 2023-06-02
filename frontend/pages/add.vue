@@ -6,6 +6,7 @@
 
   // config
   const config = useRuntimeConfig()
+  const apiHome = config.public['apiBase'] || window.location.origin
 
   // local page items
   const title = ref(0)
@@ -26,7 +27,7 @@
       description: description.value
     }
     console.log('API', '/add', t)
-    const ret = await useFetch(`${config.public['apiBase']}/add`, {
+    const ret = await useFetch(`${apiHome}/api/add_todo`, {
       method: 'post',
       body: t,
       headers: {
