@@ -5,9 +5,9 @@ resource "cloudflare_pages_project" "frontend_project" {
   production_branch = "main"
   
   build_config {
-    build_command       = "npm run build"
+    build_command       = "./build.sh"
     destination_dir     = "dist"
-    root_dir            = "frontend"
+    root_dir            = "/"
   }
 
   source {
